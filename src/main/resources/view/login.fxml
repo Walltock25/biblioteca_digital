@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.biblioteca.controller.LoginController">
+
+    <center>
+        <VBox alignment="CENTER" spacing="20" style="-fx-background-color: #f5f5f5;">
+            <padding>
+                <Insets top="40" right="40" bottom="40" left="40"/>
+            </padding>
+
+            <!-- Título -->
+            <Label text="Sistema de Biblioteca Digital" style="-fx-text-fill: #2c3e50;">
+                <font>
+                    <Font name="System Bold" size="24"/>
+                </font>
+            </Label>
+
+            <Label text="Iniciar Sesión" style="-fx-text-fill: #34495e;">
+                <font>
+                    <Font size="16"/>
+                </font>
+            </Label>
+
+            <!-- Formulario -->
+            <VBox spacing="15" maxWidth="350">
+                <!-- Email -->
+                <VBox spacing="5">
+                    <Label text="Email:" style="-fx-text-fill: #2c3e50;"/>
+                    <TextField fx:id="emailField" promptText="usuario@ejemplo.com"
+                               style="-fx-padding: 10; -fx-font-size: 14px;"/>
+                </VBox>
+
+                <!-- Contraseña -->
+                <VBox spacing="5">
+                    <Label text="Contraseña:" style="-fx-text-fill: #2c3e50;"/>
+                    <PasswordField fx:id="passwordField" promptText="********"
+                                   style="-fx-padding: 10; -fx-font-size: 14px;"/>
+                </VBox>
+
+                <!-- Botones -->
+                <HBox spacing="10" alignment="CENTER">
+                    <Button text="Iniciar Sesión" onAction="#handleLogin"
+                            style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 10 30; -fx-font-size: 14px; -fx-cursor: hand;"
+                            defaultButton="true"/>
+
+                    <Button text="Cancelar" onAction="#handleCancelar"
+                            style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-padding: 10 30; -fx-font-size: 14px; -fx-cursor: hand;"/>
+                </HBox>
+            </VBox>
+
+            <!-- Footer -->
+            <Label text="v1.0 - Sistema de Gestión de Biblioteca"
+                   style="-fx-text-fill: #7f8c8d; -fx-font-size: 11px;">
+                <VBox.margin>
+                    <Insets top="30"/>
+                </VBox.margin>
+            </Label>
+        </VBox>
+    </center>
+</BorderPane>

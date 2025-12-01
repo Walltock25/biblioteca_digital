@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.biblioteca.controller.PrestamoController">
+
+    <top>
+        <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 20;">
+            <Label text="🔄 Gestión de Préstamos" style="-fx-text-fill: #2c3e50;">
+                <font>
+                    <Font name="System Bold" size="24"/>
+                </font>
+            </Label>
+
+            <!-- Formulario de nuevo préstamo -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <VBox spacing="5">
+                    <Label text="ID Usuario:" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="txtIdUsuario" promptText="ID del usuario" prefWidth="120"/>
+                </VBox>
+
+                <VBox spacing="5">
+                    <Label text="ID Ejemplar:" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="txtIdEjemplar" promptText="ID del ejemplar" prefWidth="120"/>
+                </VBox>
+
+                <VBox spacing="5">
+                    <Label text="Días de préstamo:" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="txtDias" text="14" prefWidth="80"/>
+                </VBox>
+
+                <Button text="➕ Realizar Préstamo" onAction="#handleRealizarPrestamo"
+                        style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-padding: 10 20; -fx-cursor: hand;">
+                    <VBox.margin>
+                        <Insets top="20"/>
+                    </VBox.margin>
+                </Button>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button text="🔄 Actualizar" onAction="#handleActualizar"
+                        style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-padding: 10 20; -fx-cursor: hand;">
+                    <VBox.margin>
+                        <Insets top="20"/>
+                    </VBox.margin>
+                </Button>
+            </HBox>
+
+            <!-- Filtros -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Filtrar por estado:" style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="cmbEstado" prefWidth="150"/>
+                <Button text="Filtrar" onAction="#handleFiltrar"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 8 15; -fx-cursor: hand;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox style="-fx-padding: 20;">
+            <!-- Tabla de préstamos -->
+            <TableView fx:id="tablaPrestamos" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="colUsuario" text="Usuario" prefWidth="150"/>
+                    <TableColumn fx:id="colLibro" text="Libro" prefWidth="200"/>
+                    <TableColumn fx:id="colCodigoBarras" text="Código Barras" prefWidth="120"/>
+                    <TableColumn fx:id="colFechaSalida" text="Fecha Salida" prefWidth="120"/>
+                    <TableColumn fx:id="colFechaEsperada" text="Fecha Esperada" prefWidth="120"/>
+                    <TableColumn fx:id="colEstado" text="Estado" prefWidth="100"/>
+                </columns>
+            </TableView>
+
+            <!-- Botones de acción -->
+            <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 15 0 0 0;">
+                <Button text="✅ Devolver Libro" onAction="#handleDevolver"
+                        style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-padding: 10 20; -fx-cursor: hand;"/>
+                <Button text="👁️ Ver Detalles" onAction="#handleVerDetalles"
+                        style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-padding: 10 20; -fx-cursor: hand;"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

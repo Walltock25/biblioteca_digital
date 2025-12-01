@@ -1,0 +1,19 @@
+/* Estilos globales */
+.root {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* Botones */
+.button {
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-opacity: 0.8;
+}
+
+/* Campos de texto */
+.text-field, .password-field {
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
