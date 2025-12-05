@@ -60,4 +60,12 @@ public interface LibroDAO extends GenericDAO<Libro, Integer> {
      * @throws SQLException si hay error en la consulta
      */
     int countEjemplaresDisponibles(Integer idLibro) throws SQLException;
+
+    /**
+     * Actualiza la lista de autores asociados a un libro existente.
+     * Elimina las relaciones anteriores y crea las nuevas.
+     * * @param libro Libro con la lista de autores actualizada
+     * @throws SQLException si hay error en la transacción
+     */
+    void updateAutores(Libro libro) throws SQLException; // <--- ¡ESTE ES EL NUEVO MÉTODO!
 }

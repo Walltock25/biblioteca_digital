@@ -1,5 +1,6 @@
 package com.biblioteca.dao.impl;
 
+import com.biblioteca.dao.AutorDAO;
 import com.biblioteca.dao.LibroDAO;
 import com.biblioteca.model.*;
 import com.biblioteca.util.DatabaseConnection;
@@ -14,6 +15,9 @@ import java.util.Optional;
  * Usa PreparedStatement para prevenir inyección SQL.
  */
 public class LibroDAOImpl implements LibroDAO {
+
+    // Instanciamos el DAO de autores para poder usarlo en la lectura
+    private final AutorDAO autorDAO = new AutorDAOImpl();
 
     private static final String INSERT_LIBRO =
             "INSERT INTO Libros (isbn, titulo, anio_publicacion, id_editorial, id_categoria) " +
@@ -121,7 +125,7 @@ public class LibroDAOImpl implements LibroDAO {
             }
 
             // 2. Guardar las relaciones Libro-Autor
-            if (!libro.getAutores().isEmpty()) {
+            if (libro.getAutores() != null && !libro.getAutores().isEmpty()) {
                 try (PreparedStatement stmtAutor = conn.prepareStatement(INSERT_LIBRO_AUTOR)) {
                     for (Autor autor : libro.getAutores()) {
                         stmtAutor.setInt(1, idLibro);
@@ -235,13 +239,13 @@ public class LibroDAOImpl implements LibroDAO {
 
     @Override
     public List<Libro> findByCategoria(Integer idCategoria) throws SQLException {
-        // Implementación similar a findByTitulo
+        // Implementación futura si es necesaria
         return new ArrayList<>();
     }
 
     @Override
     public List<Libro> findByAutor(Integer idAutor) throws SQLException {
-        // Implementación requiere JOIN con Libro_Autor
+        // Implementación futura si es necesaria
         return new ArrayList<>();
     }
 
@@ -296,6 +300,44 @@ public class LibroDAOImpl implements LibroDAO {
         return 0;
     }
 
+    // Método adicional para actualizar autores al editar un libro
+    // NOTA: Recuerda agregar este método a tu interfaz LibroDAO para evitar tener que hacer casting en el controlador.
+    public void updateAutores(Libro libro) throws SQLException {
+        String deleteSql = "DELETE FROM Libro_Autor WHERE id_libro = ?";
+        String insertSql = "INSERT INTO Libro_Autor (id_libro, id_autor) VALUES (?, ?)";
+
+        try (Connection conn = DatabaseConnection.getInstance().getConnection()) {
+            conn.setAutoCommit(false); // Transacción
+
+            try {
+                // 1. Borrar relaciones existentes
+                try (PreparedStatement stmtDel = conn.prepareStatement(deleteSql)) {
+                    stmtDel.setInt(1, libro.getIdLibro());
+                    stmtDel.executeUpdate();
+                }
+
+                // 2. Insertar las nuevas
+                if (libro.getAutores() != null && !libro.getAutores().isEmpty()) {
+                    try (PreparedStatement stmtIns = conn.prepareStatement(insertSql)) {
+                        for (Autor autor : libro.getAutores()) {
+                            stmtIns.setInt(1, libro.getIdLibro());
+                            stmtIns.setInt(2, autor.getIdAutor());
+                            stmtIns.addBatch();
+                        }
+                        stmtIns.executeBatch();
+                    }
+                }
+
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        }
+    }
+
     /**
      * Mapea un ResultSet a un objeto Libro
      */
@@ -318,7 +360,9 @@ public class LibroDAOImpl implements LibroDAO {
         categoria.setNombre(rs.getString("categoria_nombre"));
         libro.setCategoria(categoria);
 
-        // Los autores se cargarían con una consulta adicional si es necesario
+        // CORRECCIÓN: Usamos el DAO de autores para llenar la lista correctamente
+        List<Autor> autores = autorDAO.findByLibro(libro.getIdLibro());
+        libro.setAutores(autores);
 
         return libro;
     }

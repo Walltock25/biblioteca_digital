@@ -1,15 +1,19 @@
 package com.biblioteca.controller;
 
+import com.biblioteca.dao.AutorDAO;
 import com.biblioteca.dao.CategoriaDAO;
 import com.biblioteca.dao.EditorialDAO;
 import com.biblioteca.dao.LibroDAO;
+import com.biblioteca.dao.impl.AutorDAOImpl;
 import com.biblioteca.dao.impl.CategoriaDAOImpl;
 import com.biblioteca.dao.impl.EditorialDAOImpl;
 import com.biblioteca.dao.impl.LibroDAOImpl;
+import com.biblioteca.model.Autor;
 import com.biblioteca.model.Categoria;
 import com.biblioteca.model.Editorial;
 import com.biblioteca.model.Libro;
 import com.biblioteca.util.AlertUtils;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,8 +24,9 @@ import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class LibroController {
 
@@ -34,10 +39,12 @@ public class LibroController {
     @FXML private TableColumn<Libro, String> colCategoria;
     @FXML private TableColumn<Libro, Integer> colAnio;
     @FXML private TableColumn<Libro, Integer> colEjemplares;
+    @FXML private TableColumn<Libro, String> colAutores; // Columna nueva
 
     private final LibroDAO libroDAO = new LibroDAOImpl();
     private final EditorialDAO editorialDAO = new EditorialDAOImpl();
     private final CategoriaDAO categoriaDAO = new CategoriaDAOImpl();
+    private final AutorDAO autorDAO = new AutorDAOImpl(); // Instancia DAO Autores
     private ObservableList<Libro> listaLibros;
 
     @FXML
@@ -69,6 +76,21 @@ public class LibroController {
             } catch (SQLException e) {
                 return new javafx.beans.property.SimpleIntegerProperty(0).asObject();
             }
+        });
+
+        // Configuración de la columna Autores (Unión de nombres con comas)
+        colAutores.setCellValueFactory(cellData -> {
+            List<Autor> lista = cellData.getValue().getAutores();
+
+            if (lista == null || lista.isEmpty()) {
+                return new SimpleStringProperty("Sin Autor");
+            }
+
+            String autoresTexto = lista.stream()
+                    .map(Autor::getNombre)
+                    .collect(Collectors.joining(", "));
+
+            return new SimpleStringProperty(autoresTexto);
         });
     }
 
@@ -138,9 +160,18 @@ public class LibroController {
         Libro libro = tablaLibros.getSelectionModel().getSelectedItem();
         if (libro == null) return;
 
+        // Construir string de autores
+        String autores = "Sin autor";
+        if (libro.getAutores() != null && !libro.getAutores().isEmpty()) {
+            autores = libro.getAutores().stream()
+                    .map(Autor::getNombre)
+                    .collect(Collectors.joining(", "));
+        }
+
         AlertUtils.mostrarInfo("Detalles",
                 "Título: " + libro.getTitulo() + "\n" +
                         "ISBN: " + libro.getIsbn() + "\n" +
+                        "Autores: " + autores + "\n" +
                         "Editorial: " + libro.getEditorial().getNombre() + "\n" +
                         "Categoría: " + libro.getCategoria().getNombre());
     }
@@ -164,10 +195,16 @@ public class LibroController {
         ComboBox<Editorial> cmbEditorial = new ComboBox<>();
         ComboBox<Categoria> cmbCategoria = new ComboBox<>();
 
-        // Configurar combos
+        // Lista de Autores con selección múltiple
+        ListView<Autor> listAutores = new ListView<>();
+        listAutores.setPrefHeight(100);
+        listAutores.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        // Configurar combos y lista
         try {
             cmbEditorial.setItems(FXCollections.observableArrayList(editorialDAO.findAll()));
             cmbCategoria.setItems(FXCollections.observableArrayList(categoriaDAO.findAll()));
+            listAutores.setItems(FXCollections.observableArrayList(autorDAO.findAll()));
         } catch (SQLException e) { e.printStackTrace(); }
 
         StringConverter<Editorial> edConv = new StringConverter<>() {
@@ -192,6 +229,17 @@ public class LibroController {
                 if(e.getIdEditorial().equals(libroExistente.getEditorial().getIdEditorial())) cmbEditorial.setValue(e);
             for(Categoria c : cmbCategoria.getItems())
                 if(c.getIdCategoria().equals(libroExistente.getCategoria().getIdCategoria())) cmbCategoria.setValue(c);
+
+            // Pre-seleccionar autores
+            if (libroExistente.getAutores() != null) {
+                for (Autor autorDelLibro : libroExistente.getAutores()) {
+                    for (Autor autorDeLista : listAutores.getItems()) {
+                        if (autorDeLista.getIdAutor().equals(autorDelLibro.getIdAutor())) {
+                            listAutores.getSelectionModel().select(autorDeLista);
+                        }
+                    }
+                }
+            }
         }
 
         grid.add(new Label("ISBN:"), 0, 0); grid.add(isbn, 1, 0);
@@ -199,6 +247,7 @@ public class LibroController {
         grid.add(new Label("Año:"), 0, 2); grid.add(anio, 1, 2);
         grid.add(new Label("Editorial:"), 0, 3); grid.add(cmbEditorial, 1, 3);
         grid.add(new Label("Categoría:"), 0, 4); grid.add(cmbCategoria, 1, 4);
+        grid.add(new Label("Autores:"), 0, 5); grid.add(listAutores, 1, 5);
 
         dialog.getDialogPane().setContent(grid);
 
@@ -210,6 +259,8 @@ public class LibroController {
                 try { l.setAnioPublicacion(Integer.parseInt(anio.getText())); } catch(Exception e) {}
                 l.setEditorial(cmbEditorial.getValue());
                 l.setCategoria(cmbCategoria.getValue());
+                // Asignar autores seleccionados
+                l.setAutores(new ArrayList<>(listAutores.getSelectionModel().getSelectedItems()));
                 return l;
             }
             return null;
@@ -217,8 +268,15 @@ public class LibroController {
 
         dialog.showAndWait().ifPresent(libro -> {
             try {
-                if (libroExistente == null) libroDAO.save(libro);
-                else libroDAO.update(libro);
+                if (libroExistente == null) {
+                    // Guardar nuevo con autores
+                    libroDAO.saveWithAutores(libro);
+                } else {
+                    // Actualizar datos básicos
+                    libroDAO.update(libro);
+                    // Actualizar relaciones de autores
+                    libroDAO.updateAutores(libro);
+                }
                 cargarLibros();
                 AlertUtils.mostrarInfo("Éxito", "Libro guardado");
             } catch (SQLException e) { AlertUtils.mostrarErrorBD(e); }

@@ -41,6 +41,9 @@
                     <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
                     <TableColumn fx:id="colIsbn" text="ISBN" prefWidth="120"/>
                     <TableColumn fx:id="colTitulo" text="Título" prefWidth="250"/>
+
+                    <TableColumn fx:id="colAutores" text="Autores" prefWidth="200"/>
+
                     <TableColumn fx:id="colEditorial" text="Editorial" prefWidth="150"/>
                     <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="120"/>
                     <TableColumn fx:id="colAnio" text="Año" prefWidth="80"/>
