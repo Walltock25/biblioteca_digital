@@ -68,6 +68,11 @@ public class MainController {
         loadModule("categoria", "Gestión de Categorías");
     }
 
+    @FXML
+    private void showUbicaciones() {
+        loadModule("ubicacion", "Gestión de Ubicaciones");
+    }
+
     private void loadModule(String moduleName, String titulo) {
         try {
             FXMLLoader loader = new FXMLLoader(

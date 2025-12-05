@@ -1,5 +1,8 @@
 package com.biblioteca.controller;
 
+import com.biblioteca.dao.UbicacionDAO;
+import com.biblioteca.dao.impl.UbicacionDAOImpl;
+import com.biblioteca.model.Ubicacion;
 import com.biblioteca.dao.EjemplarDAO;
 import com.biblioteca.dao.LibroDAO;
 import com.biblioteca.dao.impl.EjemplarDAOImpl;
@@ -23,6 +26,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class EjemplarController {
+    private final UbicacionDAO ubicacionDAO = new UbicacionDAOImpl();
 
     @FXML private TableView<Ejemplar> tablaEjemplares;
     @FXML private TableColumn<Ejemplar, Integer> colId;
@@ -90,7 +94,7 @@ public class EjemplarController {
     private void handleNuevoEjemplar() {
         Dialog<Ejemplar> dialog = new Dialog<>();
         dialog.setTitle("Nuevo Ejemplar");
-        dialog.setHeaderText("Generación Automática de Código");
+        dialog.setHeaderText("Registro de Inventario");
 
         ButtonType guardarBtn = new ButtonType("Generar y Guardar", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(guardarBtn, ButtonType.CANCEL);
@@ -98,41 +102,56 @@ public class EjemplarController {
         GridPane grid = new GridPane();
         grid.setHgap(10); grid.setVgap(10); grid.setPadding(new Insets(20));
 
+        // --- COMBO BOX LIBROS ---
         ComboBox<Libro> cmbLibro = new ComboBox<>();
         cmbLibro.setPromptText("Seleccione Libro...");
-        cmbLibro.setPrefWidth(250);
+        cmbLibro.setPrefWidth(300);
         try { cmbLibro.setItems(FXCollections.observableArrayList(libroDAO.findAll())); } catch (SQLException e) {}
 
-        // Convertidor para que el Combo muestre el título correctamente
         cmbLibro.setConverter(new StringConverter<Libro>() {
             @Override public String toString(Libro l) { return l != null ? l.getTitulo() : ""; }
             @Override public Libro fromString(String s) { return null; }
         });
 
-        ComboBox<EstadoFisico> cmbEstado = new ComboBox<>(FXCollections.observableArrayList(EstadoFisico.values()));
-        cmbEstado.setValue(EstadoFisico.BUENO); // Valor por defecto
+        // --- NUEVO: COMBO BOX UBICACIÓN ---
+        ComboBox<Ubicacion> cmbUbicacion = new ComboBox<>();
+        cmbUbicacion.setPromptText("Seleccione Ubicación...");
+        cmbUbicacion.setPrefWidth(300);
+        try { cmbUbicacion.setItems(FXCollections.observableArrayList(ubicacionDAO.findAll())); } catch (SQLException e) {}
 
+        // Usamos el método getUbicacionCompleta() que ya tienes en tu modelo
+        cmbUbicacion.setConverter(new StringConverter<Ubicacion>() {
+            @Override public String toString(Ubicacion u) {
+                return u != null ? u.getUbicacionCompleta() : "";
+            }
+            @Override public Ubicacion fromString(String s) { return null; }
+        });
+
+        // --- COMBO BOX ESTADO ---
+        ComboBox<EstadoFisico> cmbEstado = new ComboBox<>(FXCollections.observableArrayList(EstadoFisico.values()));
+        cmbEstado.setValue(EstadoFisico.BUENO);
+
+        // Agregamos todo al Grid
         grid.add(new Label("Libro:"), 0, 0); grid.add(cmbLibro, 1, 0);
-        grid.add(new Label("Estado:"), 0, 1); grid.add(cmbEstado, 1, 1);
-        grid.add(new Label("Nota: El código se genera solo."), 1, 2);
+        grid.add(new Label("Ubicación:"), 0, 1); grid.add(cmbUbicacion, 1, 1); // <--- Nuevo campo
+        grid.add(new Label("Estado:"), 0, 2); grid.add(cmbEstado, 1, 2);
 
         dialog.getDialogPane().setContent(grid);
 
         dialog.setResultConverter(btn -> {
             if (btn == guardarBtn && cmbLibro.getValue() != null) {
                 try {
-                    Libro libro = cmbLibro.getValue();
                     Ejemplar ej = new Ejemplar();
-                    ej.setLibro(libro);
+                    ej.setLibro(cmbLibro.getValue());
 
-                    // Lógica de generación de código (Simplificada)
-                    String codigo = generarCodigo(libro);
-                    ej.setCodigoBarras(codigo);
+                    // Asignamos la ubicación seleccionada (puede ser null y no pasa nada gracias a tu DAO fix)
+                    ej.setUbicacion(cmbUbicacion.getValue());
 
                     ej.setEstadoFisico(cmbEstado.getValue());
+                    ej.setDisponible(true);
 
-                    // --- AQUÍ ESTÁ EL FIX DEL BOOLEANO ---
-                    ej.setDisponible(true); // ¡Forzamos explícitamente a TRUE al nacer!
+                    // Generamos código
+                    ej.setCodigoBarras(generarCodigo(cmbLibro.getValue()));
 
                     return ej;
                 } catch (SQLException e) {
@@ -146,8 +165,9 @@ public class EjemplarController {
         dialog.showAndWait().ifPresent(nuevoEjemplar -> {
             try {
                 ejemplarDAO.save(nuevoEjemplar);
-                cargarEjemplares(); // Recarga la tabla
-                AlertUtils.mostrarInfo("Éxito", "Ejemplar " + nuevoEjemplar.getCodigoBarras() + " creado.");
+                cargarEjemplares();
+                AlertUtils.mostrarInfo("Éxito", "Ejemplar guardado en: " +
+                        (nuevoEjemplar.getUbicacion() != null ? nuevoEjemplar.getUbicacion().getUbicacionCompleta() : "Sin ubicación"));
             } catch (SQLException e) {
                 AlertUtils.mostrarErrorBD(e);
             }

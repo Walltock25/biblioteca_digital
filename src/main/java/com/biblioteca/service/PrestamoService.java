@@ -121,9 +121,14 @@ public class PrestamoService {
         boolean prestamoActualizado = prestamoDAO.update(prestamo);
 
         // 6. LIBERAR EL EJEMPLAR
-        Ejemplar ejemplar = prestamo.getEjemplar();
-        ejemplar.setDisponible(true);
-        boolean ejemplarActualizado = ejemplarDAO.update(ejemplar);
+        // Primero obtenemos el objeto COMPLETO desde la BD para no perder datos (como ubicación o id_libro)
+        Ejemplar ejemplarCompleto = ejemplarDAO.findById(prestamo.getEjemplar().getIdEjemplar())
+                .orElseThrow(() -> new IllegalStateException("El ejemplar ya no existe en la BD"));
+
+        ejemplarCompleto.setDisponible(true);
+
+        // Ahora sí actualizamos el objeto completo y seguro
+        boolean ejemplarActualizado = ejemplarDAO.update(ejemplarCompleto);
 
         return prestamoActualizado && ejemplarActualizado;
     }

@@ -35,22 +35,25 @@
                 <Button text="📚 Libros" onAction="#showLibros" prefWidth="150"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;"/>
 
-                <Button text="📦 Ejemplares" onAction="#showEjemplares" prefWidth="150"
+                <Button text="Ejemplares" onAction="#showEjemplares" prefWidth="150"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;"/>
 
-                <Button text="🔄 Préstamos" onAction="#showPrestamos" prefWidth="150"
+                <Button text="Préstamos" onAction="#showPrestamos" prefWidth="150"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;"/>
 
-                <Button text="👥 Usuarios" onAction="#showUsuarios" prefWidth="150"
+                <Button text="Usuarios" onAction="#showUsuarios" prefWidth="150"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;"/>
 
-                <Button text="💰 Multas" onAction="#showMultas" prefWidth="150"
+                <Button text="Multas" onAction="#showMultas" prefWidth="150"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;"/>
 
-                <Button text="🏭 Editoriales" onAction="#showEditoriales" prefWidth="150"
+                <Button text="Editoriales" onAction="#showEditoriales" prefWidth="150"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;"/>
 
-                <Button text="🏷️ Categorías" onAction="#showCategorias" prefWidth="150"
+                <Button text="Categorías" onAction="#showCategorias" prefWidth="150"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;"/>
+
+                <Button text="Ubicaciones" onAction="#showUbicaciones" prefWidth="150"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;"/>
             </HBox>
         </VBox>
