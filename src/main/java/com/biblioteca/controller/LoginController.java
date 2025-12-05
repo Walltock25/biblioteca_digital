@@ -13,9 +13,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
 
-/**
- * Controlador para la pantalla de login
- */
 public class LoginController {
 
     @FXML

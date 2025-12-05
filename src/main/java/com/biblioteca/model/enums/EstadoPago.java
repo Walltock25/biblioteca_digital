@@ -1,8 +1,5 @@
 package com.biblioteca.model.enums;
 
-/**
- * Enumeración para el estado de pago de multas
- */
 public enum EstadoPago {
     PENDIENTE("Pendiente"),
     PAGADO("Pagado");

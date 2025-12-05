@@ -2,10 +2,6 @@ package com.biblioteca.model;
 
 import java.util.Objects;
 
-/**
- * Entidad que representa un rol de usuario (Admin, Estudiante, etc.)
- * Mapea la tabla 'Roles' en FNBC.
- */
 public class Rol {
 
     private Integer idRol;

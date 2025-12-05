@@ -3,14 +3,6 @@ package com.biblioteca.model;
 import com.biblioteca.model.enums.EstadoFisico;
 import java.util.Objects;
 
-/**
- * Entidad que representa la COPIA FÍSICA de un libro.
- * Mapea la tabla 'Ejemplares' en FNBC.
- *
- * DISTINCIÓN CRÍTICA:
- * - Un Libro puede tener múltiples Ejemplares (copias físicas)
- * - Cada Ejemplar tiene su propio código de barras, ubicación y estado
- */
 public class Ejemplar {
 
     private Integer idEjemplar;

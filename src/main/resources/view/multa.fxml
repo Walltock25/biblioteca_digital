@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.biblioteca.controller.MultaController">
+
+    <top>
+        <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 20;">
+            <Label text="💰 Gestión de Multas" style="-fx-text-fill: #2c3e50;">
+                <font>
+                    <Font name="System Bold" size="24"/>
+                </font>
+            </Label>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Estado:" style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="cmbEstado" prefWidth="150"/>
+
+                <Button text="🔍 Filtrar" onAction="#handleFiltrar"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 8 15; -fx-cursor: hand;"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button text="🔄 Actualizar" onAction="#handleActualizar"
+                        style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-padding: 10 20; -fx-cursor: hand;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox style="-fx-padding: 20;">
+            <TableView fx:id="tablaMultas" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="colUsuario" text="Usuario / Préstamo" prefWidth="200"/>
+                    <TableColumn fx:id="colMonto" text="Monto ($)" prefWidth="100"/>
+                    <TableColumn fx:id="colMotivo" text="Motivo" prefWidth="250"/>
+                    <TableColumn fx:id="colFecha" text="Fecha Generada" prefWidth="150"/>
+                    <TableColumn fx:id="colEstado" text="Estado Pago" prefWidth="120"/>
+                </columns>
+            </TableView>
+
+            <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 15 0 0 0;">
+                <Button text="💲 Pagar Multa" onAction="#handleMarcarPagada"
+                        style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-padding: 10 20; -fx-cursor: hand;"/>
+
+                <Button text="👁️ Ver Detalles" onAction="#handleVerDetalles"
+                        style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-padding: 10 20; -fx-cursor: hand;"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

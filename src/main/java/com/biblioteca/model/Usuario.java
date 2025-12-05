@@ -3,10 +3,6 @@ package com.biblioteca.model;
 import java.time.LocalDate;
 import java.util.Objects;
 
-/**
- * Entidad que representa un usuario del sistema.
- * Mapea la tabla 'Usuarios' en FNBC.
- */
 public class Usuario {
 
     private Integer idUsuario;

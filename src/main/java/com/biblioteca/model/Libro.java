@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Entidad que representa la OBRA INTELECTUAL (no la copia física).
- * Mapea la tabla 'Libros' en FNBC.
- */
 public class Libro {
 
     private Integer idLibro;

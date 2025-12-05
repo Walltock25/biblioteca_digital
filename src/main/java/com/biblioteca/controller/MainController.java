@@ -15,9 +15,6 @@ import javafx.scene.Parent;
 import java.io.IOException;
 import java.sql.SQLException;
 
-/**
- * Controlador principal del dashboard
- */
 public class MainController {
 
     @FXML private Label lblUsuario;

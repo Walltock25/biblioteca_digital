@@ -9,10 +9,6 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Servicio para gestionar la lógica de negocio de préstamos.
- * Coordina múltiples DAOs y aplica reglas de negocio complejas.
- */
 public class PrestamoService {
 
     private final PrestamoDAO prestamoDAO;
@@ -32,21 +28,6 @@ public class PrestamoService {
         this.multaDAO = new MultaDAOImpl();
     }
 
-    /**
-     * MÉTODO PRINCIPAL: Realiza el préstamo de un ejemplar a un usuario.
-     *
-     * Validaciones aplicadas:
-     * 1. El usuario no puede tener multas pendientes
-     * 2. El usuario no puede exceder el límite de préstamos simultáneos
-     * 3. El ejemplar debe estar disponible
-     * 4. El ejemplar debe estar en condiciones de ser prestado
-     *
-     * @param idUsuario ID del usuario solicitante
-     * @param idEjemplar ID del ejemplar a prestar
-     * @return El préstamo creado
-     * @throws IllegalStateException si no se cumplen las validaciones
-     * @throws SQLException si hay error en la base de datos
-     */
     public Prestamo prestarLibro(Integer idUsuario, Integer idEjemplar)
             throws SQLException, IllegalStateException {
 
@@ -114,14 +95,6 @@ public class PrestamoService {
         }
     }
 
-    /**
-     * Procesa la devolución de un libro.
-     * Si hay retraso, genera automáticamente una multa.
-     *
-     * @param idPrestamo ID del préstamo a finalizar
-     * @return true si la devolución fue exitosa
-     * @throws SQLException si hay error en la base de datos
-     */
     public boolean devolverLibro(Integer idPrestamo) throws SQLException {
 
         // 1. OBTENER EL PRÉSTAMO
@@ -155,26 +128,17 @@ public class PrestamoService {
         return prestamoActualizado && ejemplarActualizado;
     }
 
-    /**
-     * Verifica si un usuario tiene multas pendientes de pago
-     */
     private boolean usuarioTieneMultasPendientes(Integer idUsuario) throws SQLException {
         List<Multa> multasPendientes = multaDAO.findByUsuarioAndEstado(
                 idUsuario, "Pendiente");
         return !multasPendientes.isEmpty();
     }
 
-    /**
-     * Cuenta cuántos préstamos activos tiene un usuario
-     */
     private int contarPrestamosActivos(Integer idUsuario) throws SQLException {
         return prestamoDAO.countPrestamosByUsuarioAndEstado(
                 idUsuario, EstadoPrestamo.ACTIVO);
     }
 
-    /**
-     * Genera una multa automática por retraso en la devolución
-     */
     private void generarMultaPorRetraso(Prestamo prestamo) throws SQLException {
         long diasRetraso = prestamo.calcularDiasRetraso();
         double montoMulta = diasRetraso * MULTA_POR_DIA;
@@ -187,25 +151,21 @@ public class PrestamoService {
         multaDAO.save(multa);
     }
 
-    /**
-     * Obtiene todos los préstamos activos de un usuario
-     */
-    public List<Prestamo> obtenerPrestamosActivosDeUsuario(Integer idUsuario)
-            throws SQLException {
-        return prestamoDAO.findByUsuarioAndEstado(idUsuario, EstadoPrestamo.ACTIVO);
+    public List<Prestamo> obtenerPrestamosActivosDeUsuario(Integer idUsuario) throws SQLException {
+        // FIX: Si no hay usuario específico (es null), traer TODOS los préstamos activos
+        if (idUsuario == null) {
+            return prestamoDAO.findByEstado(EstadoPrestamo.ACTIVO);
+        }
+        // Si hay un usuario, filtramos solo los de él
+        else {
+            return prestamoDAO.findByUsuarioAndEstado(idUsuario, EstadoPrestamo.ACTIVO);
+        }
     }
 
-    /**
-     * Obtiene todos los préstamos atrasados del sistema
-     */
     public List<Prestamo> obtenerPrestamosAtrasados() throws SQLException {
         return prestamoDAO.findByEstado(EstadoPrestamo.ATRASADO);
     }
 
-    /**
-     * Actualiza el estado de préstamos a "ATRASADO" si superaron la fecha límite.
-     * Este método debería ejecutarse periódicamente (por ejemplo, diariamente).
-     */
     public void actualizarPrestamosAtrasados() throws SQLException {
         List<Prestamo> prestamosActivos = prestamoDAO.findByEstado(EstadoPrestamo.ACTIVO);
 

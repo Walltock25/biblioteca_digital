@@ -2,10 +2,6 @@ package com.biblioteca.model;
 
 import java.util.Objects;
 
-/**
- * Entidad que representa un autor de libros.
- * Mapea la tabla 'Autores' en FNBC.
- */
 public class Autor {
 
     private Integer idAutor;

@@ -2,10 +2,6 @@ package com.biblioteca.model;
 
 import java.util.Objects;
 
-/**
- * Entidad que representa una categoría de libros.
- * Mapea la tabla 'Categorias' en FNBC.
- */
 public class Categoria {
 
     private Integer idCategoria;

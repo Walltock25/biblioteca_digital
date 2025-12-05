@@ -4,10 +4,6 @@ import com.biblioteca.model.enums.EstadoReserva;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-/**
- * Entidad que representa una reserva de libro.
- * Mapea la tabla 'Reservas' en FNBC.
- */
 public class Reserva {
 
     private Integer idReserva;

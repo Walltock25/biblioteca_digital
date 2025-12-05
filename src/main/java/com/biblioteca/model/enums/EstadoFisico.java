@@ -1,8 +1,5 @@
 package com.biblioteca.model.enums;
 
-/**
- * Enumeración para el estado físico de los ejemplares
- */
 public enum EstadoFisico {
     EXCELENTE("Excelente"),
     BUENO("Bueno"),
@@ -19,9 +16,6 @@ public enum EstadoFisico {
         return descripcion;
     }
 
-    /**
-     * Convierte un String a EstadoFisico
-     */
     public static EstadoFisico fromString(String texto) {
         for (EstadoFisico estado : EstadoFisico.values()) {
             if (estado.descripcion.equalsIgnoreCase(texto)) {

@@ -8,9 +8,7 @@ import com.biblioteca.util.DatabaseConnection;
 
 import java.io.IOException;
 
-/**
- * Clase principal de la aplicación JavaFX
- */
+
 public class App extends Application {
 
     private static Stage primaryStage;
@@ -32,9 +30,7 @@ public class App extends Application {
         loadScene("login", "Sistema de Biblioteca - Login", 600, 400);
     }
 
-    /**
-     * Carga una escena FXML
-     */
+
     public static void loadScene(String fxmlName, String title, int width, int height) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(
                 App.class.getResource("/view/" + fxmlName + ".fxml"));

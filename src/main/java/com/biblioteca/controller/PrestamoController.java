@@ -14,9 +14,7 @@ import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-/**
- * Controlador para la gestión de préstamos
- */
+
 public class PrestamoController {
 
     @FXML private TextField txtIdUsuario;

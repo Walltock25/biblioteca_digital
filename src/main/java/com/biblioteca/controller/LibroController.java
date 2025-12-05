@@ -3,15 +3,20 @@ package com.biblioteca.controller;
 import com.biblioteca.dao.LibroDAO;
 import com.biblioteca.dao.impl.LibroDAOImpl;
 import com.biblioteca.model.Libro;
+import com.biblioteca.model.Editorial; // <--- Import nuevo
+import com.biblioteca.model.Categoria; // <--- Import nuevo
 import com.biblioteca.util.AlertUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.geometry.Insets; // <--- Import nuevo
+import javafx.scene.layout.GridPane; // <--- Import nuevo
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional; // <--- Import nuevo
 
 /**
  * Controlador para la gestión de libros
@@ -43,7 +48,6 @@ public class LibroController {
         colTitulo.setCellValueFactory(new PropertyValueFactory<>("titulo"));
         colAnio.setCellValueFactory(new PropertyValueFactory<>("anioPublicacion"));
 
-        // Para Editorial y Categoria, necesitamos acceder a sus propiedades
         colEditorial.setCellValueFactory(cellData -> {
             if (cellData.getValue().getEditorial() != null) {
                 return new javafx.beans.property.SimpleStringProperty(
@@ -60,7 +64,6 @@ public class LibroController {
             return new javafx.beans.property.SimpleStringProperty("N/A");
         });
 
-        // Columna de ejemplares disponibles
         colEjemplares.setCellValueFactory(cellData -> {
             try {
                 int count = libroDAO.countEjemplaresDisponibles(
@@ -93,10 +96,7 @@ public class LibroController {
         }
 
         try {
-            // Buscar por título
             List<Libro> resultados = libroDAO.findByTitulo(busqueda);
-
-            // Si no hay resultados, intentar buscar por ISBN
             if (resultados.isEmpty()) {
                 libroDAO.findByIsbn(busqueda).ifPresent(resultados::add);
             }
@@ -113,56 +113,119 @@ public class LibroController {
         }
     }
 
+    // --- AQUÍ ESTÁ EL CAMBIO PRINCIPAL ---
     @FXML
     private void handleNuevoLibro() {
-        AlertUtils.mostrarInfo("Función en desarrollo",
-                "La funcionalidad de agregar libros estará disponible próximamente.\n\n" +
-                        "Por ahora, puedes agregar libros directamente en la base de datos.");
+        // 1. Crear el diálogo
+        Dialog<Libro> dialog = new Dialog<>();
+        dialog.setTitle("Nuevo Libro");
+        dialog.setHeaderText("Ingresa los datos del nuevo libro");
+
+        // 2. Configurar botones
+        ButtonType guardarButtonType = new ButtonType("Guardar", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(guardarButtonType, ButtonType.CANCEL);
+
+        // 3. Crear formulario
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField isbn = new TextField();
+        isbn.setPromptText("ISBN");
+        TextField titulo = new TextField();
+        titulo.setPromptText("Título");
+        TextField anio = new TextField();
+        anio.setPromptText("Año");
+        TextField idEditorial = new TextField();
+        idEditorial.setPromptText("ID Editorial (ej: 1)");
+        TextField idCategoria = new TextField();
+        idCategoria.setPromptText("ID Categoría (ej: 1)");
+
+        grid.add(new Label("ISBN:"), 0, 0);
+        grid.add(isbn, 1, 0);
+        grid.add(new Label("Título:"), 0, 1);
+        grid.add(titulo, 1, 1);
+        grid.add(new Label("Año:"), 0, 2);
+        grid.add(anio, 1, 2);
+        grid.add(new Label("ID Editorial:"), 0, 3);
+        grid.add(idEditorial, 1, 3);
+        grid.add(new Label("ID Categoría:"), 0, 4);
+        grid.add(idCategoria, 1, 4);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // 4. Convertir resultado
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == guardarButtonType) {
+                try {
+                    Libro libro = new Libro();
+                    libro.setIsbn(isbn.getText());
+                    libro.setTitulo(titulo.getText());
+                    libro.setAnioPublicacion(Integer.parseInt(anio.getText()));
+
+                    Editorial editorial = new Editorial();
+                    editorial.setIdEditorial(Integer.parseInt(idEditorial.getText()));
+                    libro.setEditorial(editorial);
+
+                    Categoria categoria = new Categoria();
+                    categoria.setIdCategoria(Integer.parseInt(idCategoria.getText()));
+                    libro.setCategoria(categoria);
+
+                    return libro;
+                } catch (NumberFormatException e) {
+                    AlertUtils.mostrarError("Error", "Año e IDs deben ser números");
+                    return null;
+                }
+            }
+            return null;
+        });
+
+        // 5. Procesar
+        Optional<Libro> result = dialog.showAndWait();
+        result.ifPresent(libro -> {
+            try {
+                libroDAO.save(libro);
+                cargarLibros();
+                AlertUtils.mostrarInfo("Éxito", "Libro guardado correctamente");
+            } catch (SQLException e) {
+                AlertUtils.mostrarErrorBD(e);
+            }
+        });
     }
+    // -------------------------------------
 
     @FXML
     private void handleEditar() {
         Libro libroSeleccionado = tablaLibros.getSelectionModel().getSelectedItem();
-
         if (libroSeleccionado == null) {
-            AlertUtils.mostrarAdvertencia("Sin selección",
-                    "Por favor selecciona un libro para editar");
+            AlertUtils.mostrarAdvertencia("Sin selección", "Por favor selecciona un libro para editar");
             return;
         }
-
-        AlertUtils.mostrarInfo("Función en desarrollo",
-                "La funcionalidad de edición estará disponible próximamente.");
+        AlertUtils.mostrarInfo("Función en desarrollo", "Próximamente editarás: " + libroSeleccionado.getTitulo());
     }
 
     @FXML
     private void handleEliminar() {
         Libro libroSeleccionado = tablaLibros.getSelectionModel().getSelectedItem();
-
         if (libroSeleccionado == null) {
-            AlertUtils.mostrarAdvertencia("Sin selección",
-                    "Por favor selecciona un libro para eliminar");
+            AlertUtils.mostrarAdvertencia("Sin selección", "Por favor selecciona un libro para eliminar");
             return;
         }
 
-        boolean confirmar = AlertUtils.mostrarConfirmacion(
-                "Confirmar eliminación",
-                "¿Estás seguro de eliminar el libro:\n" +
-                        libroSeleccionado.getTitulo() + "?");
+        boolean confirmar = AlertUtils.mostrarConfirmacion("Confirmar eliminación",
+                "¿Estás seguro de eliminar el libro:\n" + libroSeleccionado.getTitulo() + "?");
 
         if (confirmar) {
             try {
-                boolean eliminado = libroDAO.delete(libroSeleccionado.getIdLibro());
-
-                if (eliminado) {
+                if (libroDAO.delete(libroSeleccionado.getIdLibro())) {
                     AlertUtils.mostrarInfo("Éxito", "Libro eliminado correctamente");
                     cargarLibros();
                 } else {
                     AlertUtils.mostrarError("Error", "No se pudo eliminar el libro");
                 }
-
             } catch (SQLException e) {
-                AlertUtils.mostrarError("Error",
-                        "No se puede eliminar el libro porque tiene ejemplares asociados");
+                AlertUtils.mostrarError("Error", "No se puede eliminar el libro (tiene ejemplares asociados)");
             }
         }
     }
@@ -170,35 +233,19 @@ public class LibroController {
     @FXML
     private void handleVerDetalles() {
         Libro libroSeleccionado = tablaLibros.getSelectionModel().getSelectedItem();
-
         if (libroSeleccionado == null) {
-            AlertUtils.mostrarAdvertencia("Sin selección",
-                    "Por favor selecciona un libro para ver detalles");
+            AlertUtils.mostrarAdvertencia("Sin selección", "Por favor selecciona un libro");
             return;
         }
 
         try {
-            int ejemplaresDisponibles = libroDAO.countEjemplaresDisponibles(
-                    libroSeleccionado.getIdLibro());
-
-            String detalles = String.format(
-                    "DETALLES DEL LIBRO\n\n" +
-                            "Título: %s\n" +
-                            "ISBN: %s\n" +
-                            "Año de Publicación: %d\n" +
-                            "Editorial: %s\n" +
-                            "Categoría: %s\n" +
-                            "Ejemplares Disponibles: %d",
-                    libroSeleccionado.getTitulo(),
-                    libroSeleccionado.getIsbn(),
-                    libroSeleccionado.getAnioPublicacion(),
-                    libroSeleccionado.getEditorial().getNombre(),
-                    libroSeleccionado.getCategoria().getNombre(),
-                    ejemplaresDisponibles
-            );
-
+            int ejemplaresDisponibles = libroDAO.countEjemplaresDisponibles(libroSeleccionado.getIdLibro());
+            String detalles = String.format("DETALLES DEL LIBRO\n\n" +
+                            "Título: %s\nISBN: %s\nAño: %d\nEditorial: %s\nCategoría: %s\nEjemplares Disponibles: %d",
+                    libroSeleccionado.getTitulo(), libroSeleccionado.getIsbn(), libroSeleccionado.getAnioPublicacion(),
+                    libroSeleccionado.getEditorial().getNombre(), libroSeleccionado.getCategoria().getNombre(),
+                    ejemplaresDisponibles);
             AlertUtils.mostrarInfo("Detalles del Libro", detalles);
-
         } catch (SQLException e) {
             AlertUtils.mostrarErrorBD(e);
         }

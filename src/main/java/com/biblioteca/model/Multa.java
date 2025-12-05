@@ -5,10 +5,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-/**
- * Entidad que representa una multa aplicada a un préstamo.
- * Mapea la tabla 'Multas' en FNBC.
- */
 public class Multa {
 
     private Integer idMulta;

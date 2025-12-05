@@ -5,10 +5,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
-/**
- * Entidad que representa la TRANSACCIÓN de préstamo de un ejemplar.
- * Mapea la tabla 'Prestamos' en FNBC.
- */
 public class Prestamo {
 
     private Integer idPrestamo;
@@ -93,9 +89,6 @@ public class Prestamo {
 
     // Métodos de negocio
 
-    /**
-     * Verifica si el préstamo está atrasado
-     */
     public boolean estaAtrasado() {
         if (estado == EstadoPrestamo.FINALIZADO) {
             return false;
@@ -103,9 +96,6 @@ public class Prestamo {
         return LocalDateTime.now().isAfter(fechaDevolucionEsperada);
     }
 
-    /**
-     * Calcula los días de retraso
-     */
     public long calcularDiasRetraso() {
         if (!estaAtrasado()) {
             return 0;

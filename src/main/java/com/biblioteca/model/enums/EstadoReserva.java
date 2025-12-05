@@ -1,8 +1,5 @@
 package com.biblioteca.model.enums;
 
-/**
- * Enumeración para el estado de las reservas
- */
 public enum EstadoReserva {
     PENDIENTE("Pendiente"),
     NOTIFICADO("Notificado"),

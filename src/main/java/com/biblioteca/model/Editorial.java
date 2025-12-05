@@ -2,10 +2,6 @@ package com.biblioteca.model;
 
 import java.util.Objects;
 
-/**
- * Entidad que representa una editorial.
- * Mapea la tabla 'Editoriales' en FNBC.
- */
 public class Editorial {
 
     private Integer idEditorial;

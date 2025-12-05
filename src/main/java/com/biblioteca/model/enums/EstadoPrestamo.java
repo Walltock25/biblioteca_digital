@@ -1,8 +1,5 @@
 package com.biblioteca.model.enums;
 
-/**
- * Enumeración para el estado de los préstamos
- */
 public enum EstadoPrestamo {
     ACTIVO("Activo"),
     FINALIZADO("Finalizado"),

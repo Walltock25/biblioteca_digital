@@ -2,10 +2,6 @@ package com.biblioteca.model;
 
 import java.util.Objects;
 
-/**
- * Entidad que representa la ubicación física de un ejemplar.
- * Mapea la tabla 'Ubicaciones' en FNBC.
- */
 public class Ubicacion {
 
     private Integer idUbicacion;
@@ -55,9 +51,6 @@ public class Ubicacion {
         this.piso = piso;
     }
 
-    /**
-     * Retorna la ubicación en formato legible
-     */
     public String getUbicacionCompleta() {
         return "Piso " + piso + " - Pasillo " + pasillo + " - Estante " + estante;
     }
