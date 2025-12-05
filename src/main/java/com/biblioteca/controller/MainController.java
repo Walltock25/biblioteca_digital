@@ -1,34 +1,20 @@
 package com.biblioteca.controller;
 
 import com.biblioteca.App;
-import com.biblioteca.controller.LoginController;
-import com.biblioteca.dao.*;
-import com.biblioteca.dao.impl.*;
-import com.biblioteca.model.enums.EstadoPrestamo;
 import com.biblioteca.util.AlertUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
-import javafx.scene.Parent;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 public class MainController {
 
     @FXML private Label lblUsuario;
-    @FXML private Label lblTotalLibros;
-    @FXML private Label lblPrestamosActivos;
-    @FXML private Label lblTotalUsuarios;
-    @FXML private Label lblMultasPendientes;
     @FXML private Label lblStatus;
     @FXML private StackPane contentArea;
-
-    private final LibroDAO libroDAO = new LibroDAOImpl();
-    private final UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
-    private final PrestamoDAO prestamoDAO = new PrestamoDAOImpl();
-    private final MultaDAO multaDAO = new MultaDAOImpl();
 
     @FXML
     public void initialize() {
@@ -37,43 +23,14 @@ public class MainController {
             lblUsuario.setText("Usuario: " + LoginController.getUsuarioActual().getNombreCompleto());
         }
 
-        // Cargar estadísticas
-        cargarEstadisticas();
-    }
-
-    private void cargarEstadisticas() {
-        try {
-            // Total de libros
-            long totalLibros = libroDAO.count();
-            lblTotalLibros.setText(String.valueOf(totalLibros));
-
-            // Préstamos activos
-            int prestamosActivos = prestamoDAO.findByEstado(EstadoPrestamo.ACTIVO).size();
-            lblPrestamosActivos.setText(String.valueOf(prestamosActivos));
-
-            // Total usuarios
-            long totalUsuarios = usuarioDAO.count();
-            lblTotalUsuarios.setText(String.valueOf(totalUsuarios));
-
-            // Multas pendientes
-            long multasPendientes = multaDAO.findAll().stream()
-                    .filter(m -> m.getEstadoPago().getDescripcion().equals("Pendiente"))
-                    .count();
-            lblMultasPendientes.setText(String.valueOf(multasPendientes));
-
-            lblStatus.setText("✓ Estadísticas actualizadas");
-
-        } catch (SQLException e) {
-            lblStatus.setText("✗ Error al cargar estadísticas");
-            AlertUtils.mostrarErrorBD(e);
-        }
+        // Cargar Dashboard por defecto al iniciar
+        showDashboard();
     }
 
     @FXML
     private void showDashboard() {
-        lblStatus.setText("Dashboard");
-        // Recargar estadísticas
-        cargarEstadisticas();
+        // Ahora sí carga la vista dashboard.fxml en el área central
+        loadModule("dashboard", "Dashboard de Estadísticas");
     }
 
     @FXML
@@ -101,6 +58,16 @@ public class MainController {
         loadModule("multa", "Gestión de Multas");
     }
 
+    @FXML
+    private void showEditoriales() {
+        loadModule("editorial", "Gestión de Editoriales");
+    }
+
+    @FXML
+    private void showCategorias() {
+        loadModule("categoria", "Gestión de Categorías");
+    }
+
     private void loadModule(String moduleName, String titulo) {
         try {
             FXMLLoader loader = new FXMLLoader(
@@ -113,8 +80,9 @@ public class MainController {
             lblStatus.setText(titulo);
 
         } catch (IOException e) {
+            e.printStackTrace(); // Útil para depurar
             AlertUtils.mostrarError("Error",
-                    "No se pudo cargar el módulo: " + e.getMessage());
+                    "No se pudo cargar el módulo '" + moduleName + "': " + e.getMessage());
         }
     }
 

@@ -1,31 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      spacing="20" style="-fx-padding: 20;">
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.biblioteca.controller.EjemplarController">
 
-    <Label text="📦 Gestión de Ejemplares (Copias Físicas)" style="-fx-text-fill: #2c3e50;">
-        <font>
-            <Font name="System Bold" size="24"/>
-        </font>
-    </Label>
+    <top>
+        <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 20;">
+            <Label text="📦 Gestión de Ejemplares (Inventario Físico)" style="-fx-text-fill: #2c3e50;">
+                <font>
+                    <Font name="System Bold" size="24"/>
+                </font>
+            </Label>
 
-    <Label text="Módulo en desarrollo. Aquí podrás:" style="-fx-font-size: 14;"/>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Button text="➕ Nuevo Ejemplar" onAction="#handleNuevoEjemplar"
+                        style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-padding: 10 20; -fx-cursor: hand;"/>
 
-    <VBox spacing="10" style="-fx-padding: 20;">
-        <Label text="✓ Ver todas las copias físicas de cada libro"/>
-        <Label text="✓ Agregar nuevos ejemplares con código de barras"/>
-        <Label text="✓ Asignar ubicaciones físicas (pasillo, estante, piso)"/>
-        <Label text="✓ Actualizar el estado físico (Excelente, Bueno, Deteriorado, Perdido)"/>
-        <Label text="✓ Marcar disponibilidad para préstamo"/>
-    </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
 
-    <Label text="Por ahora, puedes agregar ejemplares directamente en la base de datos:"
-           style="-fx-font-style: italic; -fx-text-fill: #7f8c8d;"/>
+                <Button text="🔄 Actualizar" onAction="#handleActualizar"
+                        style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-padding: 10 20; -fx-cursor: hand;"/>
+            </HBox>
+        </VBox>
+    </top>
 
-    <TextArea editable="false" wrapText="true" prefRowCount="8"
-              text="INSERT INTO Ejemplares (codigo_barras, id_libro, id_ubicacion, estado_fisico, disponible) &#10;VALUES ('ISBN001-001', 1, 1, 'Excelente', TRUE);"/>
-</VBox>
+    <center>
+        <VBox style="-fx-padding: 20;">
+            <TableView fx:id="tablaEjemplares" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="colCodigo" text="Código Barras" prefWidth="150"/>
+                    <TableColumn fx:id="colLibro" text="Libro Perteneciente" prefWidth="300"/>
+                    <TableColumn fx:id="colEstado" text="Estado Físico" prefWidth="120"/>
+                    <TableColumn fx:id="colDisponible" text="Disponible" prefWidth="100"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+</BorderPane>

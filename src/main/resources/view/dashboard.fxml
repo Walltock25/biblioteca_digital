@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.biblioteca.controller.DashboardController"
+      alignment="CENTER" spacing="30" style="-fx-padding: 40;">
+
+    <Label text="Bienvenido al Sistema de Biblioteca" style="-fx-text-fill: #2c3e50;">
+        <font>
+            <Font name="System Bold" size="28"/>
+        </font>
+    </Label>
+
+    <GridPane hgap="20" vgap="20" alignment="CENTER">
+        <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <Label text="📚" style="-fx-font-size: 40;"/>
+            <Label fx:id="lblTotalLibros" text="0" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #3498db;"/>
+            <Label text="Total Libros" style="-fx-text-fill: #7f8c8d; -fx-font-size: 14;"/>
+        </VBox>
+
+        <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <Label text="🔄" style="-fx-font-size: 40;"/>
+            <Label fx:id="lblPrestamosActivos" text="0" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #2ecc71;"/>
+            <Label text="Préstamos Activos" style="-fx-text-fill: #7f8c8d; -fx-font-size: 14;"/>
+        </VBox>
+
+        <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <Label text="👥" style="-fx-font-size: 40;"/>
+            <Label fx:id="lblTotalUsuarios" text="0" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #9b59b6;"/>
+            <Label text="Usuarios" style="-fx-text-fill: #7f8c8d; -fx-font-size: 14;"/>
+        </VBox>
+
+        <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Label text="💰" style="-fx-font-size: 40;"/>
+            <Label fx:id="lblMultasPendientes" text="0" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #e74c3c;"/>
+            <Label text="Multas Pendientes" style="-fx-text-fill: #7f8c8d; -fx-font-size: 14;"/>
+        </VBox>
+    </GridPane>
+</VBox>

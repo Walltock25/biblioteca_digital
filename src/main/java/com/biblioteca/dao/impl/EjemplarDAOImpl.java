@@ -53,7 +53,17 @@ public class EjemplarDAOImpl implements EjemplarDAO {
 
             stmt.setString(1, ejemplar.getCodigoBarras());
             stmt.setInt(2, ejemplar.getLibro().getIdLibro());
-            stmt.setInt(3, ejemplar.getUbicacion() != null ? ejemplar.getUbicacion().getIdUbicacion() : null);
+
+            // --- CORRECCIÓN INICIO ---
+            // Verificamos si la ubicación existe antes de intentar obtener su ID
+            if (ejemplar.getUbicacion() != null) {
+                stmt.setInt(3, ejemplar.getUbicacion().getIdUbicacion());
+            } else {
+                // Si es nula, le decimos explícitamente a SQL que ponga NULL
+                stmt.setNull(3, Types.INTEGER);
+            }
+            // --- CORRECCIÓN FIN ---
+
             stmt.setString(4, ejemplar.getEstadoFisico().getDescripcion());
             stmt.setBoolean(5, ejemplar.getDisponible());
 

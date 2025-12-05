@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.biblioteca.controller.CategoriaController">
+    <top>
+        <HBox spacing="10" style="-fx-padding: 20; -fx-background-color: white;">
+            <Label text="🏷️ Categorías" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="➕ Nueva Categoría" onAction="#handleNueva"
+                    style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-cursor: hand;"/>
+        </HBox>
+    </top>
+    <center>
+        <TableView fx:id="tablaCategorias" style="-fx-padding: 20;">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+                <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200"/>
+                <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="300"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

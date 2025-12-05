@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.biblioteca.controller.EditorialController">
+    <top>
+        <HBox spacing="10" style="-fx-padding: 20; -fx-background-color: white;">
+            <Label text="🏭 Editoriales" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="➕ Nueva Editorial" onAction="#handleNueva"
+                    style="-fx-background-color: #2ecc71; -fx-text-fill: white;"/>
+        </HBox>
+    </top>
+    <center>
+        <TableView fx:id="tablaEditoriales" style="-fx-padding: 20;">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+                <TableColumn fx:id="colNombre" text="Nombre" prefWidth="250"/>
+                <TableColumn fx:id="colPais" text="País" prefWidth="150"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>
