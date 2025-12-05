@@ -29,31 +29,37 @@
             </HBox>
 
             <HBox spacing="0" style="-fx-background-color: #34495e;">
-                <Button text="📊 Dashboard" onAction="#showDashboard" prefWidth="150"
+                <Button text="📊 Dashboard" onAction="#showDashboard" prefWidth="120"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand; -fx-border-color: transparent; -fx-border-width: 0 0 3 0;"/>
 
-                <Button text="📚 Libros" onAction="#showLibros" prefWidth="150"
+                <Button text="📚 Libros" onAction="#showLibros" prefWidth="120"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;"/>
 
-                <Button text="Ejemplares" onAction="#showEjemplares" prefWidth="150"
+                <Button text="✍️ Autores" onAction="#showAutores" prefWidth="120"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;"/>
 
-                <Button text="Préstamos" onAction="#showPrestamos" prefWidth="150"
+                <Button text="📦 Ejemplares" onAction="#showEjemplares" prefWidth="120"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;"/>
 
-                <Button text="Usuarios" onAction="#showUsuarios" prefWidth="150"
+                <Button text="🔄 Préstamos" onAction="#showPrestamos" prefWidth="120"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;"/>
 
-                <Button text="Multas" onAction="#showMultas" prefWidth="150"
+                <Button text="🔖 Reservas" onAction="#showReservas" prefWidth="120"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;"/>
 
-                <Button text="Editoriales" onAction="#showEditoriales" prefWidth="150"
+                <Button text="👥 Usuarios" onAction="#showUsuarios" prefWidth="120"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;"/>
 
-                <Button text="Categorías" onAction="#showCategorias" prefWidth="150"
+                <Button text="💰 Multas" onAction="#showMultas" prefWidth="120"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;"/>
 
-                <Button text="Ubicaciones" onAction="#showUbicaciones" prefWidth="150"
+                <Button text="🏭 Editoriales" onAction="#showEditoriales" prefWidth="120"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;"/>
+
+                <Button text="🏷️ Categorías" onAction="#showCategorias" prefWidth="120"
+                        style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;"/>
+
+                <Button text="📍 Ubicaciones" onAction="#showUbicaciones" prefWidth="120"
                         style="-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 15; -fx-cursor: hand;"/>
             </HBox>
         </VBox>

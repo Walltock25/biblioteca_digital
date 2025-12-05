@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.biblioteca.controller.ReservaController">
+
+    <top>
+        <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 20;">
+            <Label text="🔖 Gestión de Reservas" style="-fx-text-fill: #2c3e50;">
+                <font>
+                    <Font name="System Bold" size="24"/>
+                </font>
+            </Label>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <VBox spacing="5">
+                    <Label text="Usuario:" style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="cmbUsuario" promptText="Seleccionar Usuario" prefWidth="250"/>
+                </VBox>
+
+                <VBox spacing="5">
+                    <Label text="Libro a Reservar:" style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="cmbLibro" promptText="Seleccionar Libro" prefWidth="300"/>
+                </VBox>
+
+                <Button text="➕ Crear Reserva" onAction="#handleRealizarReserva"
+                        style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-cursor: hand;">
+                    <VBox.margin>
+                        <Insets top="20"/>
+                    </VBox.margin>
+                </Button>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button text="🔄 Actualizar" onAction="#handleActualizar"
+                        style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-cursor: hand;">
+                    <VBox.margin>
+                        <Insets top="20"/>
+                    </VBox.margin>
+                </Button>
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Filtrar por estado:" style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="cmbFiltroEstado" prefWidth="150"/>
+                <Button text="Filtrar" onAction="#handleFiltrar"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox style="-fx-padding: 20;">
+            <TableView fx:id="tablaReservas" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+                    <TableColumn fx:id="colUsuario" text="Usuario" prefWidth="200"/>
+                    <TableColumn fx:id="colLibro" text="Libro" prefWidth="250"/>
+                    <TableColumn fx:id="colFecha" text="Fecha Reserva" prefWidth="150"/>
+                    <TableColumn fx:id="colEstado" text="Estado" prefWidth="120"/>
+                </columns>
+            </TableView>
+
+            <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 15 0 0 0;">
+                <Button text="📢 Notificar Usuario" onAction="#handleNotificar"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 10 20; -fx-cursor: hand;"/>
+                <Button text="✅ Completar" onAction="#handleCompletar"
+                        style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-padding: 10 20; -fx-cursor: hand;"/>
+                <Button text="❌ Cancelar" onAction="#handleCancelar"
+                        style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-padding: 10 20; -fx-cursor: hand;"/>
+                <Button text="👁️ Ver Detalles" onAction="#handleVerDetalles"
+                        style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-padding: 10 20; -fx-cursor: hand;"/>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>
